@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>RequestEL v1.0.0</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    
+</head>
+<body style="height: 100%;">
+
+    <div class="container" style="">
+        <h1>RequestEL</h1>
+        URL: <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text" onclick="toggleMethod()" id="method-btn" style="cursor:pointer">GET</div>
+                </div>
+                <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="https://google.com">
+              </div>
+        <br/>
+        <button class="btn btn-primary" onclick="addBodyItem()">+</button><br/><br>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Identifier</th>
+                    <th scope="col">Value</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody id="body-area">
+                <tr id="0">
+                        <th scope="row"><input type="text" class="form-control" id="0-id"></th>
+                        <th><input type="text" class="form-control" id="0-val"></th>
+                        <th><button class="btn btn-danger"  onclick="removeItem(0)"><i class="fa fa-trash"></i></button></th>
+                </tr>
+            </tbody>
+        </table>
+        
+    <div class="card" style="padding: 10px">
+            <h3>Output <small id="code-display" style="display: none;">[Code <span id="return-code">200</span>]</small></h3>
+            <br>
+            <p style='font-family: "Lucida Console"' id="console-output">
+                
+            </p>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <center>
+        
+    <button class="btn btn-primary" style="position: fixed; bottom: 50px; width: 75%; right: 12%;" onclick="submitRequest()">Submit</button>
+    </center>
+</body>
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script>
+    const $ = require("jquery")
+    method = "GET"
+    id = 1
+
+    function submitRequest() {
+        var body = {}
+        $("#body-area").children().each(item => {
+            let id = $($("#body-area").children()[item]).attr('id')
+            if($("#" + id + "-id").val() != '') {
+                body[$("#" + id + "-id").val()] = $("#" + id + "-val").val()
+            }
+        })
+        console.log(body)
+        $.ajax({
+            url: $("#inlineFormInputGroup").val(),
+            method: method,
+            data: body,
+            success: function(e) {
+                $("#code-display").show()
+                $("#return-code").html("200")
+                $("#console-output").html(e)
+                console.log(e)
+                if($("#console-output").html() == "") {
+                    $("#console-output").html(JSON.stringify(e))
+                    
+                }
+            },
+            error: function(e) {
+                $("#code-display").show()
+                $("#return-code").html(e.status)
+                $("#console-output").html(e.statusText)
+                console.log(e)
+            }
+        })
+    }
+
+    function toggleMethod() {
+        method = (method == "GET" ? "POST" : "GET")
+        $("#method-btn").html(method)
+    }
+
+    function removeItem(id) {
+        var ret = false
+        $("#body-area").children().each(item => {
+            if(!ret) {
+                if($($("#body-area").children()[item]).attr('id') == id) {
+                    $($("#body-area").children()[item]).remove()
+                    console.log(id)
+                }
+            }
+        })
+    }
+
+    function addBodyItem() {
+        $("#body-area").append(`
+            <tr id="${id}">
+                <th scope="row"><input type="text" class="form-control" id="${id}-id"></th>
+                <th><input type="text" class="form-control" id="${id}-val"></th>
+                <th><button class="btn btn-danger"  onclick="removeItem(${id})"><i class="fa fa-trash"></i></button></th>
+            </tr>
+        `)
+        id++
+    }
+</script>
+</html>

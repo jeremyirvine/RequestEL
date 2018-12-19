@@ -1,0 +1,17 @@
+{
+  "name": "requestel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron index.js"
+  },
+  "author": "Jeremy Irvine (jeremyirvine@bamboo-us.com)",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.1.3",
+    "electron-packager": "^13.0.1",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.3.1"
+  }
+}
